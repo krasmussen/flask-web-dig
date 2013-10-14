@@ -1,0 +1,30 @@
+<html>
+<body>
+{% if displayform %}
+<form name="lookupform" action="." method="post">
+Domain Name: <input type="text" name="domainname"><br>
+Nameserver Group: <select name="nameservers"><br>
+{% for dnsserver in dnsserverdict.keys() %}
+<option value="{{dnsserver}}"> {{dnsserver}} </option>
+{% endfor %}
+</select>
+<br>
+<input type="submit" value="submit">
+</form>
+{% else %}
+<table border="1" cellpadding="10">
+<tr>
+<td colspan="2" align="center"> <h1> {{nameservers}} </h1> </td>
+</tr>
+<tr>
+<td> Nameserver: </td> <td> lookup result for {{domain}} </td>
+</tr>
+{% for dnsserver in dnslookups.keys() %}
+<tr>
+<td> {{dnsserver}} </td> <td> {{dnslookups[dnsserver]["result"].rstrip()}} </td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+</body>
+</html>
