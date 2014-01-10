@@ -3,6 +3,7 @@ from subprocess import Popen, PIPE
 from flask import Flask, render_template, request
 from time import sleep
 from collections import OrderedDict
+import socket
 
 app = Flask(__name__)
 
@@ -34,13 +35,9 @@ def index():
 			"208.67.220.220",
 			"216.87.84.211",
 			"23.90.4.6",
-			"199.5.157.131",
-			"208.71.35.137",
 			"109.69.8.51",
 			"195.46.39.39",
 			"195.46.39.40",
-			"184.169.143.224",
-			"184.169.161.155",
 			"208.76.50.50",
 			"208.76.51.51"
 			]),
@@ -87,20 +84,12 @@ def index():
 			"216.87.84.211",
 			"23.90.4.6"
 		]),
-		("Public-Root", [
-			"199.5.157.131",
-			"208.71.35.137"
-		]),
 		("puntCAT", [
 			"109.69.8.51"
 		]),
 		("SafeDNS", [
 			"195.46.39.39",
 			"195.46.39.40"
-		]),
-		("Securly", [
-			"184.169.143.224",
-			"184.169.161.155"
 		]),
 		("SmartViper", [
 			"208.76.50.50",
@@ -124,6 +113,15 @@ def index():
 
 	domain = request.form["domainname"]
 
+	# Figure out if domain provided is actually an IP for us to do a reverse lookup on
+
+	try:
+		socket.inet_aton(domain)
+
+		isip = True
+	except:
+		isip = False
+
 	# Create a dictionary to store our data
 
 	dnslookups = OrderedDict()
@@ -131,7 +129,10 @@ def index():
 	# Add process objects to dictionary
 
 	for dnsserver in dnsservers:
-		dnslookups[dnsserver] = {"process": Popen( [ "dig", "@%s" %(dnsserver), domain, "+short"  ], stdout=PIPE )}
+		if isip:
+			dnslookups[dnsserver] = {"process": Popen( [ "dig", "-x", domain, "@%s" %(dnsserver), "+short"  ], stdout=PIPE )}
+		else:
+			dnslookups[dnsserver] = {"process": Popen( [ "dig", "@%s" %(dnsserver), domain, "+short"  ], stdout=PIPE )}
 
 	# Wait for all processes to complete
 
