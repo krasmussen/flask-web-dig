@@ -1,18 +1,29 @@
 <html>
+<head>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #009933;
+}
+</style>
+</head>
 <body>
+<div style="display: table; height: 100%; width: 100%;">
+	<div style="display: table-cell; vertical-align: middle; text-align: center; font-size:xx-large; font-weight:bold;">
 {% if displayform %}
 	<form name="lookupform" action="." method="post">
-	Domain Name: <input type="text" name="domainname"><br>
-	Nameserver Group: <select name="nameservers"><br>
+	Domain Name or IP: <input type="text" name="domainname" style="font-size: large;"><br>
+	Nameserver Group: <select name="nameservers" style="font-size: large;"><br>
 	{% for dnsserver in dnsserverdict.keys() %}
 		<option value="{{dnsserver}}"> {{dnsserver}} </option>
 	{% endfor %}
 	</select>
 	<br>
-	<input type="submit" value="submit">
+	<input type="submit" value="submit" style="font-size: xx-large;">
 	</form>
 {% else %}
-	<table border="1" cellpadding="10">
+	<table border="1" cellpadding="10" style="margin-left:auto; margin-right:auto;">
 	<tr>
 	<td colspan="2" align="center"> <h1> {{nameservers}} </h1> </td>
 	</tr>
@@ -26,5 +37,7 @@
 	{% endfor %}
 	</table>
 {% endif %}
+</div>
+</div>
 </body>
 </html>
