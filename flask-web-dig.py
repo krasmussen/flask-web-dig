@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
 from flask import Flask, render_template, request
 from time import sleep
 from collections import OrderedDict
-import socket
+from socket import inet_aton
 
 app = Flask(__name__)
 
@@ -116,8 +116,7 @@ def index():
 	# Figure out if domain provided is actually an IP for us to do a reverse lookup on
 
 	try:
-		socket.inet_aton(domain)
-
+		inet_aton(domain)
 		isip = True
 	except:
 		isip = False
